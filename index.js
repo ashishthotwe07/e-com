@@ -1,7 +1,9 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import { db } from './config/db.js';
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { db } from "./config/db.js";
+import authRoutes from "./routes/auth.routes.js";
+import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 
 // Load environment variables from a .env file
 dotenv.config();
@@ -16,9 +18,14 @@ app.use(express.json());
 app.use(cors());
 
 // Define a route for the root URL
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
+
+app.use('/api/user' , authRoutes)
+
+app.use(notFound);
+app.use(errorHandler);
 
 // Define the port number
 const PORT = process.env.PORT || 3000;
